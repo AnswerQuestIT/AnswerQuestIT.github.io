@@ -1,51 +1,438 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>AnswerQuestIT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countries of the World</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@100..900&display=swap');  
-      #title {text-align: center;
-              font-family: "Bitcount Prop Single", system-ui;
-              font-optical-sizing: big;
-              font-weight: <weight>;
-              font-style: normal;
-              font-variation-settings:
-              "slnt" 0,
-              "CRSV" 0.5,
-              "ELSH" 0,
-              "ELXP" 0;
-          }
-      #choclate {border-radius: 25px;
-                text-align: center;
-                border: 2px solid black;
-                padding: 20px;
-                width: 200px;
-                height: 150px;
-                padding: center;
-                position: relative;
-                top: 20px;
-              }
-      
-      body {
-        font-family: "Outfit", sans-serif;
-        font-optical-sizing: large;
-        font-weight: auto;
-        font-style: normal;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Outfit", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            padding: 12px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 25px;
+            width: 300px;
+            max-width: 90%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .filter-buttons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .countries-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .country-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .country-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .country-flag {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .country-name {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .country-info {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .country-info p {
+            margin-bottom: 8px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .no-results {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .countries-container {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div id = "title">
-      <h1 >AnswerQuestIT</h1>
-      <h3>A small blog page by Amogh</h2>
+</head>
+<body>
+    <div class="header">
+        <h1>🌍 Countries of the World</h1>
+        <p>Explore information about all countries</p>
     </div>
-    <div id = "choclate">
-      <h2>Why is choclate bad for dogs?</h2>
+
+    <div class="controls">
+        <input 
+            type="text" 
+            class="search-box" 
+            id="searchInput" 
+            placeholder="Search countries by name..."
+        >
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-continent="all">All Continents</button>
+            <button class="filter-btn" data-continent="Africa">Africa</button>
+            <button class="filter-btn" data-continent="Asia">Asia</button>
+            <button class="filter-btn" data-continent="Europe">Europe</button>
+            <button class="filter-btn" data-continent="North America">North America</button>
+            <button class="filter-btn" data-continent="South America">South America</button>
+            <button class="filter-btn" data-continent="Oceania">Oceania</button>
+        </div>
     </div>
-  </body>
+
+    <div class="countries-container" id="countriesContainer">
+        <!-- Countries will be populated here -->
+    </div>
+
+    <script>
+        const countriesData = [
+            { name: "Afghanistan", flag: "🇦🇫", capital: "Kabul", continent: "Asia", population: "40.2M" },
+            { name: "Albania", flag: "🇦🇱", capital: "Tirana", continent: "Europe", population: "2.9M" },
+            { name: "Algeria", flag: "🇩🇿", capital: "Algiers", continent: "Africa", population: "45.6M" },
+            { name: "Andorra", flag: "🇦🇩", capital: "Andorra la Vella", continent: "Europe", population: "0.08M" },
+            { name: "Angola", flag: "🇦🇴", capital: "Luanda", continent: "Africa", population: "35.6M" },
+            { name: "Argentina", flag: "🇦🇷", capital: "Buenos Aires", continent: "South America", population: "46.9M" },
+            { name: "Australia", flag: "🇦🇺", capital: "Canberra", continent: "Oceania", population: "26.5M" },
+            { name: "Austria", flag: "🇦🇹", capital: "Vienna", continent: "Europe", population: "9.1M" },
+            { name: "Azerbaijan", flag: "🇦🇿", capital: "Baku", continent: "Asia", population: "10.2M" },
+            { name: "Bahamas", flag: "🇧🇸", capital: "Nassau", continent: "North America", population: "0.4M" },
+            { name: "Bahrain", flag: "🇧🇭", capital: "Manama", continent: "Asia", population: "1.8M" },
+            { name: "Bangladesh", flag: "🇧🇩", capital: "Dhaka", continent: "Asia", population: "170.6M" },
+            { name: "Barbados", flag: "🇧🇧", capital: "Bridgetown", continent: "North America", population: "0.3M" },
+            { name: "Belarus", flag: "🇧🇾", capital: "Minsk", continent: "Europe", population: "9.4M" },
+            { name: "Belgium", flag: "🇧🇪", capital: "Brussels", continent: "Europe", population: "11.6M" },
+            { name: "Belize", flag: "🇧🇿", capital: "Belmopan", continent: "North America", population: "0.4M" },
+            { name: "Benin", flag: "🇧🇯", capital: "Porto-Novo", continent: "Africa", population: "13.3M" },
+            { name: "Bhutan", flag: "🇧🇹", capital: "Thimphu", continent: "Asia", population: "0.8M" },
+            { name: "Bolivia", flag: "🇧🇴", capital: "La Paz", continent: "South America", population: "12.2M" },
+            { name: "Bosnia and Herzegovina", flag: "🇧🇦", capital: "Sarajevo", continent: "Europe", population: "3.2M" },
+            { name: "Botswana", flag: "🇧🇼", capital: "Gaborone", continent: "Africa", population: "2.6M" },
+            { name: "Brazil", flag: "🇧🇷", capital: "Brasília", continent: "South America", population: "215.3M" },
+            { name: "Brunei", flag: "🇧🇳", capital: "Bandar Seri Begawan", continent: "Asia", population: "0.4M" },
+            { name: "Bulgaria", flag: "🇧🇬", capital: "Sofia", continent: "Europe", population: "6.9M" },
+            { name: "Burkina Faso", flag: "🇧🇫", capital: "Ouagadougou", continent: "Africa", population: "22.0M" },
+            { name: "Burundi", flag: "🇧🇮", capital: "Gitega", continent: "Africa", population: "12.9M" },
+            { name: "Cambodia", flag: "🇰🇭", capital: "Phnom Penh", continent: "Asia", population: "17.0M" },
+            { name: "Cameroon", flag: "🇨🇲", capital: "Yaoundé", continent: "Africa", population: "28.4M" },
+            { name: "Canada", flag: "🇨🇦", capital: "Ottawa", continent: "North America", population: "39.7M" },
+            { name: "Cape Verde", flag: "🇨🇻", capital: "Praia", continent: "Africa", population: "0.6M" },
+            { name: "Central African Republic", flag: "🇨🇫", capital: "Bangui", continent: "Africa", population: "5.0M" },
+            { name: "Chad", flag: "🇹🇩", capital: "N'Djamena", continent: "Africa", population: "17.6M" },
+            { name: "Chile", flag: "🇨🇱", capital: "Santiago", continent: "South America", population: "19.6M" },
+            { name: "China", flag: "🇨🇳", capital: "Beijing", continent: "Asia", population: "1420.1M" },
+            { name: "Colombia", flag: "🇨🇴", capital: "Bogotá", continent: "South America", population: "52.1M" },
+            { name: "Comoros", flag: "🇰🇲", capital: "Moroni", continent: "Africa", population: "0.9M" },
+            { name: "Congo", flag: "🇨🇬", capital: "Brazzaville", continent: "Africa", population: "6.1M" },
+            { name: "Costa Rica", flag: "🇨🇷", capital: "San José", continent: "North America", population: "5.3M" },
+            { name: "Croatia", flag: "🇭🇷", capital: "Zagreb", continent: "Europe", population: "3.9M" },
+            { name: "Cuba", flag: "🇨🇺", capital: "Havana", continent: "North America", population: "10.9M" },
+            { name: "Cyprus", flag: "🇨🇾", capital: "Nicosia", continent: "Europe", population: "1.3M" },
+            { name: "Czech Republic", flag: "🇨🇿", capital: "Prague", continent: "Europe", population: "10.5M" },
+            { name: "Denmark", flag: "🇩🇰", capital: "Copenhagen", continent: "Europe", population: "5.9M" },
+            { name: "Djibouti", flag: "🇩🇯", capital: "Djibouti City", continent: "Africa", population: "1.1M" },
+            { name: "Dominica", flag: "🇩🇲", capital: "Roseau", continent: "North America", population: "0.07M" },
+            { name: "Dominican Republic", flag: "🇩🇴", capital: "Santo Domingo", continent: "North America", population: "11.1M" },
+            { name: "Ecuador", flag: "🇪🇨", capital: "Quito", continent: "South America", population: "18.2M" },
+            { name: "Egypt", flag: "🇪🇬", capital: "Cairo", continent: "Africa", population: "110.6M" },
+            { name: "El Salvador", flag: "🇸🇻", capital: "San Salvador", continent: "North America", population: "6.5M" },
+            { name: "Equatorial Guinea", flag: "🇬🇶", capital: "Malabo", continent: "Africa", population: "1.7M" },
+            { name: "Eritrea", flag: "🇪🇷", capital: "Asmara", continent: "Africa", population: "6.3M" },
+            { name: "Estonia", flag: "🇪🇪", capital: "Tallinn", continent: "Europe", population: "1.4M" },
+            { name: "Eswatini", flag: "🇸🇿", capital: "Mbabane", continent: "Africa", population: "1.2M" },
+            { name: "Ethiopia", flag: "🇪🇹", capital: "Addis Ababa", continent: "Africa", population: "123.4M" },
+            { name: "Fiji", flag: "🇫🇯", capital: "Suva", continent: "Oceania", population: "0.9M" },
+            { name: "Finland", flag: "🇫🇮", capital: "Helsinki", continent: "Europe", population: "5.6M" },
+            { name: "France", flag: "🇫🇷", capital: "Paris", continent: "Europe", population: "68.0M" },
+            { name: "Gabon", flag: "🇬🇦", capital: "Libreville", continent: "Africa", population: "2.4M" },
+            { name: "Gambia", flag: "🇬🇲", capital: "Banjul", continent: "Africa", population: "2.5M" },
+            { name: "Georgia", flag: "🇬🇪", capital: "Tbilisi", continent: "Asia", population: "3.9M" },
+            { name: "Germany", flag: "🇩🇪", capital: "Berlin", continent: "Europe", population: "84.4M" },
+            { name: "Ghana", flag: "🇬🇭", capital: "Accra", continent: "Africa", population: "34.5M" },
+            { name: "Greece", flag: "🇬🇷", capital: "Athens", continent: "Europe", population: "10.4M" },
+            { name: "Grenada", flag: "🇬🇩", capital: "Saint George's", continent: "North America", population: "0.1M" },
+            { name: "Guatemala", flag: "🇬🇹", capital: "Guatemala City", continent: "North America", population: "17.5M" },
+            { name: "Guinea", flag: "🇬🇳", capital: "Conakry", continent: "Africa", population: "14.0M" },
+            { name: "Guinea-Bissau", flag: "🇬🇼", capital: "Bissau", continent: "Africa", population: "2.0M" },
+            { name: "Guyana", flag: "🇬🇾", capital: "Georgetown", continent: "South America", population: "0.8M" },
+            { name: "Haiti", flag: "🇭🇹", capital: "Port-au-Prince", continent: "North America", population: "11.4M" },
+            { name: "Honduras", flag: "🇭🇳", capital: "Tegucigalpa", continent: "North America", population: "10.1M" },
+            { name: "Hungary", flag: "🇭🇺", capital: "Budapest", continent: "Europe", population: "9.7M" },
+            { name: "Iceland", flag: "🇮🇸", capital: "Reykjavik", continent: "Europe", population: "0.4M" },
+            { name: "India", flag: "🇮🇳", capital: "New Delhi", continent: "Asia", population: "1417.2M" },
+            { name: "Indonesia", flag: "🇮🇩", capital: "Jakarta", continent: "Asia", population: "277.5M" },
+            { name: "Iran", flag: "🇮🇷", capital: "Tehran", continent: "Asia", population: "91.6M" },
+            { name: "Iraq", flag: "🇮🇶", capital: "Baghdad", continent: "Asia", population: "44.9M" },
+            { name: "Ireland", flag: "🇮🇪", capital: "Dublin", continent: "Europe", population: "5.3M" },
+            { name: "Israel", flag: "🇮🇱", capital: "Jerusalem", continent: "Asia", population: "9.9M" },
+            { name: "Italy", flag: "🇮🇹", capital: "Rome", continent: "Europe", population: "57.9M" },
+            { name: "Jamaica", flag: "🇯🇲", capital: "Kingston", continent: "North America", population: "2.8M" },
+            { name: "Japan", flag: "🇯🇵", capital: "Tokyo", continent: "Asia", population: "124.1M" },
+            { name: "Jordan", flag: "🇯🇴", capital: "Amman", continent: "Asia", population: "10.2M" },
+            { name: "Kazakhstan", flag: "🇰🇿", capital: "Nur-Sultan", continent: "Asia", population: "20.2M" },
+            { name: "Kenya", flag: "🇰🇪", capital: "Nairobi", continent: "Africa", population: "54.0M" },
+            { name: "Kiribati", flag: "🇰🇮", capital: "Tarawa", continent: "Oceania", population: "0.14M" },
+            { name: "Kuwait", flag: "🇰🇼", capital: "Kuwait City", continent: "Asia", population: "4.3M" },
+            { name: "Kyrgyzstan", flag: "🇰🇬", capital: "Bishkek", continent: "Asia", population: "6.7M" },
+            { name: "Laos", flag: "🇱🇦", capital: "Vientiane", continent: "Asia", population: "7.5M" },
+            { name: "Latvia", flag: "🇱🇻", capital: "Riga", continent: "Europe", population: "1.8M" },
+            { name: "Lebanon", flag: "🇱🇧", capital: "Beirut", continent: "Asia", population: "5.5M" },
+            { name: "Lesotho", flag: "🇱🇸", capital: "Maseru", continent: "Africa", population: "2.2M" },
+            { name: "Liberia", flag: "🇱🇷", capital: "Monrovia", continent: "Africa", population: "5.3M" },
+            { name: "Libya", flag: "🇱🇾", capital: "Tripoli", continent: "Africa", population: "7.0M" },
+            { name: "Liechtenstein", flag: "🇱🇮", capital: "Vaduz", continent: "Europe", population: "0.04M" },
+            { name: "Lithuania", flag: "🇱🇹", capital: "Vilnius", continent: "Europe", population: "2.8M" },
+            { name: "Luxembourg", flag: "🇱🇺", capital: "Luxembourg City", continent: "Europe", population: "0.7M" },
+            { name: "Madagascar", flag: "🇲🇬", capital: "Antananarivo", continent: "Africa", population: "28.8M" },
+            { name: "Malawi", flag: "🇲🇼", capital: "Lilongwe", continent: "Africa", population: "20.1M" },
+            { name: "Malaysia", flag: "🇲🇾", capital: "Kuala Lumpur", continent: "Asia", population: "34.4M" },
+            { name: "Maldives", flag: "🇲🇻", capital: "Malé", continent: "Asia", population: "0.5M" },
+            { name: "Mali", flag: "🇲🇱", capital: "Bamako", continent: "Africa", population: "23.5M" },
+            { name: "Malta", flag: "🇲🇹", capital: "Valletta", continent: "Europe", population: "0.5M" },
+            { name: "Marshall Islands", flag: "🇲🇭", capital: "Majuro", continent: "Oceania", population: "0.04M" },
+            { name: "Mauritania", flag: "🇲🇷", capital: "Nouakchott", continent: "Africa", population: "5.0M" },
+            { name: "Mauritius", flag: "🇲🇺", capital: "Port Louis", continent: "Africa", population: "1.3M" },
+            { name: "Mexico", flag: "🇲🇽", capital: "Mexico City", continent: "North America", population: "128.3M" },
+            { name: "Micronesia", flag: "🇫🇲", capital: "Palikir", continent: "Oceania", population: "0.12M" },
+            { name: "Moldova", flag: "🇲🇩", capital: "Chişinău", continent: "Europe", population: "3.5M" },
+            { name: "Monaco", flag: "🇲🇨", capital: "Monaco", continent: "Europe", population: "0.04M" },
+            { name: "Mongolia", flag: "🇲🇳", capital: "Ulaanbaatar", continent: "Asia", population: "3.5M" },
+            { name: "Montenegro", flag: "🇲🇪", capital: "Podgorica", continent: "Europe", population: "0.6M" },
+            { name: "Morocco", flag: "🇲🇦", capital: "Rabat", continent: "Africa", population: "37.6M" },
+            { name: "Mozambique", flag: "🇲🇿", capital: "Maputo", continent: "Africa", population: "33.9M" },
+            { name: "Myanmar", flag: "🇲🇲", capital: "Naypyidaw", continent: "Asia", population: "54.8M" },
+            { name: "Namibia", flag: "🇳🇦", capital: "Windhoek", continent: "Africa", population: "2.6M" },
+            { name: "Nauru", flag: "🇳🇷", capital: "Yaren", continent: "Oceania", population: "0.01M" },
+            { name: "Nepal", flag: "🇳🇵", capital: "Kathmandu", continent: "Asia", population: "30.5M" },
+            { name: "Netherlands", flag: "🇳🇱", capital: "Amsterdam", continent: "Europe", population: "17.8M" },
+            { name: "New Zealand", flag: "🇳🇿", capital: "Wellington", continent: "Oceania", population: "5.2M" },
+            { name: "Nicaragua", flag: "🇳🇮", capital: "Managua", continent: "North America", population: "7.1M" },
+            { name: "Niger", flag: "🇳🇪", capital: "Niamey", continent: "Africa", population: "28.5M" },
+            { name: "Nigeria", flag: "🇳🇬", capital: "Abuja", continent: "Africa", population: "223.8M" },
+            { name: "North Korea", flag: "🇰🇵", capital: "Pyongyang", continent: "Asia", population: "26.2M" },
+            { name: "North Macedonia", flag: "🇲🇰", capital: "Skopje", continent: "Europe", population: "2.0M" },
+            { name: "Norway", flag: "🇳🇴", capital: "Oslo", continent: "Europe", population: "5.6M" },
+            { name: "Oman", flag: "🇴🇲", capital: "Muscat", continent: "Asia", population: "5.2M" },
+            { name: "Pakistan", flag: "🇵🇰", capital: "Islamabad", continent: "Asia", population: "240.5M" },
+            { name: "Palau", flag: "🇵🇼", capital: "Ngerulmud", continent: "Oceania", population: "0.02M" },
+            { name: "Palestine", flag: "🇵🇸", capital: "Ramallah", continent: "Asia", population: "5.2M" },
+            { name: "Panama", flag: "🇵🇦", capital: "Panama City", continent: "North America", population: "4.4M" },
+            { name: "Papua New Guinea", flag: "🇵🇬", capital: "Port Moresby", continent: "Oceania", population: "9.6M" },
+            { name: "Paraguay", flag: "🇵🇾", capital: "Asunción", continent: "South America", population: "6.8M" },
+            { name: "Peru", flag: "🇵🇪", capital: "Lima", continent: "South America", population: "35.3M" },
+            { name: "Philippines", flag: "🇵🇭", capital: "Manila", continent: "Asia", population: "119.1M" },
+            { name: "Poland", flag: "🇵🇱", capital: "Warsaw", continent: "Europe", population: "37.7M" },
+            { name: "Portugal", flag: "🇵🇹", capital: "Lisbon", continent: "Europe", population: "10.5M" },
+            { name: "Qatar", flag: "🇶🇦", capital: "Doha", continent: "Asia", population: "3.2M" },
+            { name: "Romania", flag: "🇷🇴", capital: "Bucharest", continent: "Europe", population: "18.4M" },
+            { name: "Russia", flag: "🇷🇺", capital: "Moscow", continent: "Europe", population: "144.4M" },
+            { name: "Rwanda", flag: "🇷🇼", capital: "Kigali", continent: "Africa", population: "14.3M" },
+            { name: "Saint Kitts and Nevis", flag: "🇰🇳", capital: "Basseterre", continent: "North America", population: "0.05M" },
+            { name: "Saint Lucia", flag: "🇱🇨", capital: "Castries", continent: "North America", population: "0.18M" },
+            { name: "Saint Vincent and the Grenadines", flag: "🇻🇨", capital: "Kingstown", continent: "North America", population: "0.1M" },
+            { name: "Samoa", flag: "🇼🇸", capital: "Apia", continent: "Oceania", population: "0.2M" },
+            { name: "San Marino", flag: "🇸🇲", capital: "San Marino", continent: "Europe", population: "0.04M" },
+            { name: "Sao Tome and Principe", flag: "🇸🇹", capital: "São Tomé", continent: "Africa", population: "0.2M" },
+            { name: "Saudi Arabia", flag: "🇸🇦", capital: "Riyadh", continent: "Asia", population: "36.8M" },
+            { name: "Senegal", flag: "🇸🇳", capital: "Dakar", continent: "Africa", population: "17.9M" },
+            { name: "Serbia", flag: "🇷🇸", capital: "Belgrade", continent: "Europe", population: "6.6M" },
+            { name: "Seychelles", flag: "🇸🇨", capital: "Victoria", continent: "Africa", population: "0.1M" },
+            { name: "Sierra Leone", flag: "🇸🇱", capital: "Freetown", continent: "Africa", population: "8.6M" },
+            { name: "Singapore", flag: "🇸🇬", capital: "Singapore", continent: "Asia", population: "5.9M" },
+            { name: "Slovakia", flag: "🇸🇰", capital: "Bratislava", continent: "Europe", population: "5.5M" },
+            { name: "Slovenia", flag: "🇸🇮", capital: "Ljubljana", continent: "Europe", population: "2.1M" },
+            { name: "Solomon Islands", flag: "🇸🇧", capital: "Honiara", continent: "Oceania", population: "0.7M" },
+            { name: "Somalia", flag: "🇸🇴", capital: "Mogadishu", continent: "Africa", population: "18.1M" },
+            { name: "South Africa", flag: "🇿🇦", capital: "Pretoria", continent: "Africa", population: "60.1M" },
+            { name: "South Korea", flag: "🇰🇷", capital: "Seoul", continent: "Asia", population: "51.8M" },
+            { name: "South Sudan", flag: "🇸🇸", capital: "Juba", continent: "Africa", population: "11.4M" },
+            { name: "Spain", flag: "🇪🇸", capital: "Madrid", continent: "Europe", population: "48.1M" },
+            { name: "Sri Lanka", flag: "🇱🇰", capital: "Colombo", continent: "Asia", population: "22.2M" },
+            { name: "Sudan", flag: "🇸🇩", capital: "Khartoum", continent: "Africa", population: "45.7M" },
+            { name: "Suriname", flag: "🇸🇷", capital: "Paramaribo", continent: "South America", population: "0.6M" },
+            { name: "Sweden", flag: "🇸🇪", capital: "Stockholm", continent: "Europe", population: "10.5M" },
+            { name: "Switzerland", flag: "🇨🇭", capital: "Bern", continent: "Europe", population: "8.9M" },
+            { name: "Syria", flag: "🇸🇾", capital: "Damascus", continent: "Asia", population: "22.1M" },
+            { name: "Taiwan", flag: "🇹🇼", capital: "Taipei", continent: "Asia", population: "23.9M" },
+            { name: "Tajikistan", flag: "🇹🇯", capital: "Dushanbe", continent: "Asia", population: "10.0M" },
+            { name: "Tanzania", flag: "🇹🇿", capital: "Dar es Salaam", continent: "Africa", population: "63.6M" },
+            { name: "Thailand", flag: "🇹🇭", capital: "Bangkok", continent: "Asia", population: "71.8M" },
+            { name: "Timor-Leste", flag: "🇹🇱", capital: "Dili", continent: "Asia", population: "1.3M" },
+            { name: "Togo", flag: "🇹🇬", capital: "Lomé", continent: "Africa", population: "9.1M" },
+            { name: "Tonga", flag: "🇹🇴", capital: "Nuku'alofa", continent: "Oceania", population: "0.1M" },
+            { name: "Trinidad and Tobago", flag: "🇹🇹", capital: "Port of Spain", continent: "North America", population: "1.4M" },
+            { name: "Tunisia", flag: "🇹🇳", capital: "Tunis", continent: "Africa", population: "12.8M" },
+            { name: "Turkey", flag: "🇹🇷", capital: "Ankara", continent: "Asia", population: "87.0M" },
+            { name: "Turkmenistan", flag: "🇹🇲", capital: "Ashgabat", continent: "Asia", population: "6.4M" },
+            { name: "Tuvalu", flag: "🇹🇻", capital: "Funafuti", continent: "Oceania", population: "0.013M" },
+            { name: "Uganda", flag: "🇺🇬", capital: "Kampala", continent: "Africa", population: "48.3M" },
+            { name: "Ukraine", flag: "🇺🇦", capital: "Kyiv", continent: "Europe", population: "38.0M" },
+            { name: "United Arab Emirates", flag: "🇦🇪", capital: "Abu Dhabi", continent: "Asia", population: "9.9M" },
+            { name: "United Kingdom", flag: "🇬🇧", capital: "London", continent: "Europe", population: "68.5M" },
+            { name: "United States", flag: "🇺🇸", capital: "Washington D.C.", continent: "North America", population: "339.9M" },
+            { name: "Uruguay", flag: "🇺🇾", capital: "Montevideo", continent: "South America", population: "3.4M" },
+            { name: "Uzbekistan", flag: "🇺🇿", capital: "Tashkent", continent: "Asia", population: "34.9M" },
+            { name: "Vanuatu", flag: "🇻🇺", capital: "Port Vila", continent: "Oceania", population: "0.3M" },
+            { name: "Vatican City", flag: "🇻🇦", capital: "Vatican City", continent: "Europe", population: "0.0008M" },
+            { name: "Venezuela", flag: "🇻🇪", capital: "Caracas", continent: "South America", population: "29.0M" },
+            { name: "Vietnam", flag: "🇻🇳", capital: "Hanoi", continent: "Asia", population: "98.2M" },
+            { name: "Yemen", flag: "🇾🇪", capital: "Sana'a", continent: "Asia", population: "35.9M" },
+            { name: "Zambia", flag: "🇿🇲", capital: "Lusaka", continent: "Africa", population: "20.0M" },
+            { name: "Zimbabwe", flag: "🇿🇼", capital: "Harare", continent: "Africa", population: "16.0M" }
+        ];
+
+        let filteredCountries = [...countriesData];
+        let currentFilter = 'all';
+
+        function displayCountries(countries) {
+            const container = document.getElementById('countriesContainer');
+            
+            if (countries.length === 0) {
+                container.innerHTML = '<div class="no-results">No countries found. Try a different search!</div>';
+                return;
+            }
+
+            container.innerHTML = countries.map(country => `
+                <div class="country-card">
+                    <div class="country-flag">${country.flag}</div>
+                    <div class="country-name">${country.name}</div>
+                    <div class="country-info">
+                        <p><span class="info-label">Capital:</span> ${country.capital}</p>
+                        <p><span class="info-label">Continent:</span> ${country.continent}</p>
+                        <p><span class="info-label">Population:</span> ${country.population}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCountries() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredCountries = countriesData.filter(country => {
+                const matchesSearch = country.name.toLowerCase().includes(searchTerm) ||
+                                    country.capital.toLowerCase().includes(searchTerm);
+                const matchesContinent = currentFilter === 'all' || country.continent === currentFilter;
+                
+                return matchesSearch && matchesContinent;
+            });
+
+            displayCountries(filteredCountries);
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterCountries);
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.continent;
+                filterCountries();
+            });
+        });
+
+        // Initial display
+        displayCountries(countriesData);
+    </script>
+</body>
 </html>
